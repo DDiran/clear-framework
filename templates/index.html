@@ -61,22 +61,10 @@
             const outputBox = this.$refs.results.firstElementChild;
             outputBox.classList.remove("is-hidden");
 
-            // Replace \n with HTML line breaks
-            const formattedData = data
-              .replace(
-                /Explanation:/g,
-                '<strong class="title is-5">Explanation:</strong>'
-              )
-              .replace(
-                /(Clarity:|Length:|Expectations:|Active Language:|Relevance:)/g,
-                '<br><strong class="subtitle is-6">$1</strong>'
-              )
-              .replace(/\n\n/g, "<br><br>")
-              .replace(/\n/g, "<br>");
-
-            outputBox.innerHTML = data;
+            outputBox.innerHTML = data.slice(1, -2);
           })
           .catch((error) => {
+            console.log(error);
             analyzeButton.classList.remove("is-loading");
             this.$refs.results.innerHTML = `<div class="notification is-danger">An error occurred. Please try again.</div>`;
           });

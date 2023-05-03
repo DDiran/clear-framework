@@ -12,6 +12,12 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 app = Flask(__name__)
 
+def format_response(response_text):
+    if response_text[0] == '"' and response_text[-1] == '"':
+        response_text = response_text[1:-1]
+    with_title = f"<h2 class='subtitle is-3'>Your Prompt Report</h2><p>{response_text}</p>"
+    return with_title.replace("\n", "<br />")
+
 def analyze_prompt_with_chatgpt(prompt):
     response = openai.ChatCompletion.create(
   model="gpt-3.5-turbo",
@@ -22,7 +28,8 @@ def analyze_prompt_with_chatgpt(prompt):
         {"role": "user", "content": prompt}
     ]
 )
-    return response.choices[0]['message']['content']
+    response_text = response.choices[0]['message']['content']
+    return format_response(response_text)
 
 # def analyze_prompt_with_gpt2(prompt, max_length=1000, num_return_sequences=1):
 #     combined_prompt = f"{GPT_2_PROMPT} {prompt}\n\nEVALUATION:"
