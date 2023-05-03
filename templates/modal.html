@@ -1,0 +1,20 @@
+<!-- Modal with Bulma and Alpine.js -->
+<div class="modal" :class="{ 'is-active': showModal }">
+  <div class="modal-background" @click="close"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Attention</p>
+      <button class="delete" @click="close" aria-label="Close"></button>
+    </header>
+    <section class="modal-card-body">
+      Please note that this is a demo project for the Hackathon 21 presentation
+      on AI. We are using real compute which costs real money, so please be
+      mindful of your usage. Thank you!
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button" @click="close">
+        I promise I won't abuse this app
+      </button>
+    </footer>
+  </div>
+</div>

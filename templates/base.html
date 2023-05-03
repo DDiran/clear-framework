@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% block head %}
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='favicon.ico') }}" />
+    {% block styles %}
+    <!-- Load main.css from the static/css folder, including Bulma -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/main.css') }}" />
+    {% endblock %}
+
+    <title>C.L.E.A.R. Prompt Analyser</title>
+    {% endblock %}
+  </head>
+  <body>
+    <!-- Your page content -->
+    {% block content %}{% endblock %}
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+      defer></script>
+    {% block scripts %}
+    <!-- Optional JavaScript -->
+    {% endblock %}
+  </body>
+</html>

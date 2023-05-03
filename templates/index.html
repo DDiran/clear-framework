@@ -1,0 +1,90 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container" x-data="app">
+  <section class="section">
+    <div class="container">
+      <div class="level">
+        <div class="level-left">
+          <h1 class="title is-primary">CLEAR Prompt Analyzer</h1>
+        </div>
+        <div class="level-right">
+          <span class="tag is-primary">Hackathon 21</span>
+        </div>
+      </div>
+      <div class="content">{% include "info.html" %}</div>
+      <form id="clear-form" @submit.prevent="submitForm" method="post">
+        <div class="field">
+          <label for="prompt" class="label">Enter your prompt:</label>
+          <textarea
+            class="textarea"
+            id="prompt"
+            name="prompt"
+            x-model="prompt"
+            x-ref="prompt"
+            rows="3"
+            required></textarea>
+        </div>
+        <button
+          type="submit"
+          x-ref="analyzeButton"
+          class="button is-primary mt-2"
+          :disabled="!prompt.length">
+          Analyze
+        </button>
+      </form>
+      <div id="results" class="mt-4" x-ref="results">
+        <div class="output-box is-hidden"></div>
+      </div>
+    </div>
+  </section>
+  {% include "modal.html" %}
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  const app = () => {
+    return {
+      showModal: true,
+      prompt: "",
+      submitForm() {
+        const analyzeButton = this.$refs.analyzeButton;
+        analyzeButton.classList.add("is-loading");
+
+        const prompt = this.$refs.prompt.value;
+        fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ prompt }),
+        })
+          .then((response) => response.text())
+          .then((data) => {
+            analyzeButton.classList.remove("is-loading");
+            const outputBox = this.$refs.results.firstElementChild;
+            outputBox.classList.remove("is-hidden");
+
+            // Replace \n with HTML line breaks
+            const formattedData = data
+              .replace(
+                /Explanation:/g,
+                '<strong class="title is-5">Explanation:</strong>'
+              )
+              .replace(
+                /(Clarity:|Length:|Expectations:|Active Language:|Relevance:)/g,
+                '<br><strong class="subtitle is-6">$1</strong>'
+              )
+              .replace(/\n\n/g, "<br><br>")
+              .replace(/\n/g, "<br>");
+
+            outputBox.innerHTML = data;
+          })
+          .catch((error) => {
+            analyzeButton.classList.remove("is-loading");
+            this.$refs.results.innerHTML = `<div class="notification is-danger">An error occurred. Please try again.</div>`;
+          });
+      },
+      close() {
+        this.showModal = false;
+      },
+    };
+  };
+</script>
+{% endblock %}
